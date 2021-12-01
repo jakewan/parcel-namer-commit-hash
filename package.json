@@ -16,5 +16,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@parcel/plugin": "^2.0.1"
   }
 }
