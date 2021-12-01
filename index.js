@@ -1,6 +1,6 @@
-import { Namer } from "@parcel/plugin"
+const Plugin = require("@parcel/plugin")
 
-export default new Namer({
+exports.default = new Plugin.Namer({
   name({ bundle }) {
     console.log(bundle.type)
     return null
