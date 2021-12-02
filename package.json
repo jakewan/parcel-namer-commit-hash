@@ -2,12 +2,12 @@
   "name": "@tacoherd/parcel-namer-commit-hash",
   "version": "0.2.4",
   "description": "",
-  "main": "index.mjs",
+  "type": "module",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "files": [
-    "index.mjs"
+    "index.js"
   ],
   "author": "",
   "license": "ISC",
