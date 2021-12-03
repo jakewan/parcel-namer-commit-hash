@@ -1,19 +1,14 @@
-const Plugin = require("@parcel/plugin")
+const { Namer } = require("@parcel/plugin")
+const { Config } = require("./config")
+const commitHashPlaceholder = "{commit-hash}"
+const contentHashPlaceholder = "{content-hash}"
 
-module.exports = new Plugin.Namer({
-  async loadConfig({ config, options, logger }) {
-    console.log("Inside loadConfig")
-    console.log(config)
-    console.log(options)
-    console.log(logger)
+module.exports = new Namer({
+  async loadConfig({ config }) {
+    return new Config(await config.getPackage())
   },
-  async name({ bundle, bundleGraph, config, options, logger }) {
-    console.log("Inside name")
-    console.log(bundle)
-    console.log(bundleGraph)
-    console.log(config)
-    console.log(options)
-    console.log(logger)
-    return "some-bundle.js"
+  async name({ bundle, config }) {
+    let result = config.pattern.replaceAll(commitHashPlaceholder, "some-hash")
+    return result.replaceAll(contentHashPlaceholder, bundle.hashReference)
   },
 })

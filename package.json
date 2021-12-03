@@ -6,7 +6,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "files": [
-    "index.js"
+    "index.js","config.js"
   ],
   "author": "",
   "license": "ISC",
@@ -18,5 +18,8 @@
   },
   "dependencies": {
     "@parcel/plugin": "^2.0.1"
+  },
+  "engines": {
+    "parcel": "^2.0.1"
   }
 }
