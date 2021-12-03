@@ -1,10 +1,11 @@
-import { Namer } from "@parcel/plugin"
+const Plugin = require("@parcel/plugin")
 
-export default new Namer({
+module.exports = new Plugin.Namer({
   async loadConfig({ config }) {
-    return "foo"
+    console.log("Inside loadConfig")
   },
   async name({ bundler }) {
+    console.log("Inside name")
     return "some-bundle.js"
   },
 })

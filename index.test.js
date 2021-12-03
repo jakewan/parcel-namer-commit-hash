@@ -1,4 +1,4 @@
-import MyNamer from "./index"
+const MyNamer = require("./index")
 const CONFIG = Symbol.for("parcel-plugin-config")
 
 test("names bundle correctly", async () => {
