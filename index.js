@@ -10,11 +10,11 @@ module.exports = new Namer({
     return new Config(await config.getPackage())
   },
   async name({ bundle, config, logger }) {
-    const pattern = config.patterns[bundle.type] || config.pattern
-    if (!pattern) {
-      throw new Error("Could not discern pattern")
+    const template = config.templates[bundle.type] || config.template
+    if (!template) {
+      throw new Error("Could not discern template")
     }
-    let result = pattern.replaceAll(
+    let result = template.replaceAll(
       commitHashPlaceholder,
       await this.getCommitHash(),
     )

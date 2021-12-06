@@ -3,11 +3,11 @@ const pluginKey = "@tacoherd/parcel-namer-commit-hash"
 class Config {
   constructor(packageData) {
     const pluginData = packageData[pluginKey] || {}
-    if (!pluginData.pattern && !pluginData.patterns) {
-        throw new Error('pattern configuration required')
+    if (!pluginData.template && !pluginData.templates) {
+        throw new Error('template configuration required')
     }
-    this.pattern = pluginData.pattern
-    this.patterns = pluginData.patterns || {}
+    this.template = pluginData.template
+    this.templates = pluginData.templates || {}
   }
 }
 

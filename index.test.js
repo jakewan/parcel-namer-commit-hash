@@ -19,7 +19,7 @@ test("replaces content hash", async () => {
     bundle: { type: "js", hashReference: "some-hash-ref" },
     config: new Config({
       "@tacoherd/parcel-namer-commit-hash": {
-        pattern: "foo-{content-hash}",
+        template: "foo-{content-hash}",
       },
     }),
     logger: {
@@ -45,7 +45,7 @@ test("replaces commit hash", async () => {
     bundle: { type: "js" },
     config: new Config({
       "@tacoherd/parcel-namer-commit-hash": {
-        pattern: "foo-{commit-hash}",
+        template: "foo-{commit-hash}",
       },
     }),
     logger: {
