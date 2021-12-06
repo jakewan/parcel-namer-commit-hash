@@ -9,8 +9,12 @@ module.exports = new Namer({
   async loadConfig({ config }) {
     return new Config(await config.getPackage())
   },
-  async name({ bundle, config }) {
-    let result = config.pattern.replaceAll(
+  async name({ bundle, config, logger }) {
+    const pattern = config.patterns[bundle.type] || config.pattern
+    if (!pattern) {
+      throw new Error("Could not discern pattern")
+    }
+    let result = pattern.replaceAll(
       commitHashPlaceholder,
       await this.getCommitHash(),
     )

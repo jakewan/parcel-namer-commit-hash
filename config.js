@@ -1,15 +1,16 @@
-const pluginKey = '@tacoherd/parcel-namer-commit-hash'
+const pluginKey = "@tacoherd/parcel-namer-commit-hash"
 
 class Config {
-    constructor(packageData) {
-        const pluginData = packageData[pluginKey] || {}
-        this.pattern = pluginData.pattern
-        if (!this.pattern) {
-            throw new Error('parcel-namer-commit-hash requires a configured pattern')
-        }
+  constructor(packageData) {
+    const pluginData = packageData[pluginKey] || {}
+    if (!pluginData.pattern && !pluginData.patterns) {
+        throw new Error('pattern configuration required')
     }
+    this.pattern = pluginData.pattern
+    this.patterns = pluginData.patterns || {}
+  }
 }
 
 module.exports = {
-    Config
+  Config,
 }

@@ -1,8 +1,8 @@
 const { Config } = require("./config")
 
-test("pattern is required", () => {
+test("pattern or patterns is required", () => {
   const t = () => {
     new Config({})
   }
-  expect(t).toThrow("parcel-namer-commit-hash requires a configured pattern")
+  expect(t).toThrow("pattern configuration required")
 })
