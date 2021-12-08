@@ -2,9 +2,9 @@
 
 A [Parcel][] plugin for including the Git commit hash in bundle filenames.
 
-Requirements:
+Host requirements:
 
-- Node >= 15
+- Node 14+
 - Git
 
 ## Add to Project

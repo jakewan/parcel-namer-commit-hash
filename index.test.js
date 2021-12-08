@@ -19,6 +19,14 @@ const CONFIG = Symbol.for("parcel-plugin-config")
     gitStatusIsClean: false,
     expectedBundleName: "foo-dirty-some-hash-ref",
   },
+  {
+    description: "can replace duplicate placeholders",
+    template: "foo-{content-hash}-{commit-hash}-{content-hash}-{commit-hash}",
+    bundle: { type: "js", hashReference: "some-hash-ref" },
+    gitStatusIsClean: true,
+    expectedBundleName:
+      "foo-some-hash-ref-some-commit-hash-some-hash-ref-some-commit-hash",
+  },
 ].forEach((testCase) => {
   test(testCase.description, async () => {
     SimpleGit.mockImplementation(() => {

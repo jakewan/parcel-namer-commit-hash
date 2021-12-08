@@ -2,8 +2,8 @@ const { Namer } = require("@parcel/plugin")
 const { Config } = require("./config")
 const SimpleGit = require("simple-git")
 
-const commitHashPlaceholder = "{commit-hash}"
-const contentHashPlaceholder = "{content-hash}"
+const commitHashPlaceholder = /{commit-hash}/g
+const contentHashPlaceholder = /{content-hash}/g
 
 module.exports = new Namer({
   async loadConfig({ config }) {
@@ -30,11 +30,11 @@ module.exports = new Namer({
       // Allow the next namer to try
       return null
     }
-    const result = template.replaceAll(
+    const result = template.replace(
       commitHashPlaceholder,
       await this.getCommitHash(logger),
     )
-    return result.replaceAll(contentHashPlaceholder, bundle.hashReference)
+    return result.replace(contentHashPlaceholder, bundle.hashReference)
   },
   async getCommitHash(logger) {
     const git = SimpleGit()
