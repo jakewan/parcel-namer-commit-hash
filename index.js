@@ -9,22 +9,39 @@ module.exports = new Namer({
   async loadConfig({ config }) {
     return new Config(await config.getPackage())
   },
-  async name({ bundle, config, logger }) {
-    const template = config.templates[bundle.type] || config.template
-    if (!template) {
-      throw new Error("Could not discern template")
+  async name({ bundle, bundleGraph, config, logger }) {
+    const shouldReturnDistEntry = () => {
+      const bundleGroup = bundleGraph.getBundleGroupsContainingBundle(bundle)[0]
+      const isEntry = bundleGraph.isEntryBundleGroup(bundleGroup)
+      const bundleGroupBundles =
+        bundleGraph.getBundlesInBundleGroup(bundleGroup)
+      const mainBundle = bundleGroupBundles.find((b) =>
+        b.getEntryAssets().some((a) => a.id === bundleGroup.entryAssetId),
+      )
+      return isEntry && bundle.id === mainBundle.id && bundle.target?.distEntry
     }
-    let result = template.replaceAll(
+
+    if (shouldReturnDistEntry()) {
+      return bundle.target.distEntry
+    }
+
+    const template = config.templates[bundle.type] || config.template
+    if (typeof template !== "string") {
+      // Allow the next namer to try
+      return null
+    }
+    const result = template.replaceAll(
       commitHashPlaceholder,
-      await this.getCommitHash(),
+      await this.getCommitHash(logger),
     )
     return result.replaceAll(contentHashPlaceholder, bundle.hashReference)
   },
-  async getCommitHash() {
+  async getCommitHash(logger) {
     const git = SimpleGit()
     const status = await git.status()
     if (!status.isClean()) {
-      throw new Error("Working directory is not clean")
+      logger.log({ message: 'Returning "dirty" for commit hash' })
+      return "dirty"
     }
     return await git.revparse(["--short", "HEAD"])
   },

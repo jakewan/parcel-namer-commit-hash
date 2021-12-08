@@ -22,6 +22,7 @@
     "simple-git": "^2.48.0"
   },
   "engines": {
+    "node": ">=15",
     "parcel": "^2.0.1"
   }
 }

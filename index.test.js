@@ -4,54 +4,57 @@ const { Config } = require("./config")
 const MyNamer = require("./index")
 const CONFIG = Symbol.for("parcel-plugin-config")
 
-test("replaces content hash", async () => {
-  SimpleGit.mockImplementation(() => {
-    return {
-      status: async () => ({
-        isClean: () => true,
-      }),
-      revparse: async () => "some-commit-hash",
-    }
-  })
-  const namer = MyNamer[CONFIG]
-  // Code under test
-  const name = await namer.name({
+;[
+  {
+    description: "replaces content hash and commit hash",
+    template: "foo-{content-hash}-{commit-hash}",
     bundle: { type: "js", hashReference: "some-hash-ref" },
-    config: new Config({
-      "@tacoherd/parcel-namer-commit-hash": {
-        template: "foo-{content-hash}",
-      },
-    }),
-    logger: {
-      log: jest.fn(),
-    },
-  })
-  // Verify
-  expect(name).toBe("foo-some-hash-ref")
-})
-
-test("replaces commit hash", async () => {
-  SimpleGit.mockImplementation(() => {
-    return {
-      status: async () => ({
-        isClean: () => true,
-      }),
-      revparse: async () => "some-commit-hash",
+    gitStatusIsClean: true,
+    expectedBundleName: "foo-some-hash-ref-some-commit-hash",
+  },
+  {
+    description: 'return "dirty" if working directory not clean',
+    template: "foo-{commit-hash}-{content-hash}",
+    bundle: { type: "js", hashReference: "some-hash-ref" },
+    gitStatusIsClean: false,
+    expectedBundleName: "foo-dirty-some-hash-ref",
+  },
+].forEach((testCase) => {
+  test(testCase.description, async () => {
+    SimpleGit.mockImplementation(() => {
+      return {
+        status: async () => ({
+          isClean: () => testCase.gitStatusIsClean,
+        }),
+        revparse: async () => "some-commit-hash",
+      }
+    })
+    const bundleGraph = {
+      getBundleGroupsContainingBundle: jest
+        .fn()
+        .mockReturnValue(["some-bundle-group"]),
+      isEntryBundleGroup: jest.fn(),
+      getBundlesInBundleGroup: jest.fn().mockReturnValue([]),
     }
-  })
-  const namer = MyNamer[CONFIG]
-  // Code under test
-  const name = await namer.name({
-    bundle: { type: "js" },
-    config: new Config({
+    const config = new Config({
       "@tacoherd/parcel-namer-commit-hash": {
-        template: "foo-{commit-hash}",
+        template: testCase.template,
       },
-    }),
-    logger: {
+    })
+    const logger = {
       log: jest.fn(),
-    },
+    }
+    const namer = MyNamer[CONFIG]
+
+    // Code under test
+    const name = await namer.name({
+      bundle: testCase.bundle,
+      bundleGraph,
+      config,
+      logger,
+    })
+
+    // Verify
+    expect(name).toBe(testCase.expectedBundleName)
   })
-  // Verify
-  expect(name).toBe("foo-some-commit-hash")
 })
