@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@parcel/plugin": "^2.0.1",
-    "simple-git": "^2.48.0"
+    "simple-git": "^3.4.0"
   },
   "engines": {
     "node": ">=14",
